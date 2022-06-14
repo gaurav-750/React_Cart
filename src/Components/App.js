@@ -13,19 +13,19 @@ class App extends React.Component{
                 title : "Watch",
                 price : 1800,
                 qty : 0,
-                img : ''
+                img : 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fHdhdGNofGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60'
             },{
                 id : 2,
                 title : "Mobile",
                 price : 17000,
                 qty : 0,
-                img : ''
+                img : 'https://media.istockphoto.com/photos/closeup-of-a-businessman-hand-holding-a-smartphone-white-screen-is-picture-id1322157897?b=1&k=20&m=1322157897&s=170667a&w=0&h=SxgkGs8V4W2_kVgNs1V_gM8OW6fw4lROt1I_zlLIht4='
             },{
                 id : 3,
                 title : "Laptop",
                 price : 53000,
                 qty : 0,
-                img : ''
+                img : 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGFwdG9wfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60'
         }],
         
         
@@ -88,6 +88,18 @@ class App extends React.Component{
     return count;
   }
 
+  getTotalBill = () => {
+    const {products} = this.state;
+
+    let totalBill = 0;
+    products.map((product) => {
+      totalBill += (product.qty*product.price);
+    })
+    console.log('tb', totalBill)
+
+    return totalBill;
+  }
+
   render(){
 
     const {products} = this.state;
@@ -103,6 +115,10 @@ class App extends React.Component{
           handleDecreaseQty={this.handleDecreaseQty}
           deleteItem={this.deleteItem}
         />
+
+        <h1 style={{padding: 15}}>
+          Total: {this.getTotalBill()}
+        </h1>
       </div>
       
     );

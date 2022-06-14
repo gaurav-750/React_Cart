@@ -18,13 +18,13 @@ const customStyles = {
 function CartItem(props){
 
         // console.log('this.props', this.props);
-        const {title, price, qty, increase, decrease, deleteItem} = props;
+        const {title, img, price, qty, increase, decrease, deleteItem} = props;
 
         return (
             <div className='cart-item'>
                 
                 <div className='left-block'>
-                    <img style={customStyles.image}  />
+                    <img src={img} style={customStyles.image}  />
                 </div>
                 <div className='right-block'>
                     <div style={{fontSize : 30, fontWeight: 500}}>{title}</div>
