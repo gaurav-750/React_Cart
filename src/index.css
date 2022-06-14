@@ -8,8 +8,11 @@ body {
 }
 
 .cart-item{
-  display: flex
+  display: flex;
+  margin: 15px 5px;
 }
+
+
 
 .right-block{
   padding: 0 20px;
@@ -21,4 +24,9 @@ body {
 
 .action-buttons{
   cursor: pointer;
+}
+
+.cart{
+  display: flex;
+  flex-direction: column;
 }

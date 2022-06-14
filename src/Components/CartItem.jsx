@@ -17,25 +17,13 @@ const customStyles = {
 
 class CartItem extends React.Component{
 
-    // Define state:
-    constructor(){
-        super()
-        this.state = {
-            price : 999,
-            title : "Mobile",
-            qty : 0,
-            img : ''
-        }
-    }
-
-
     increase = () =>{
         
         //setState form:
         // this.setState({
         //     qty: this.state.qty + 1
         // });
-
+                    /* (or) */
         this.setState((prevState)=>{
             return {
                 qty : prevState.qty+1
@@ -44,13 +32,18 @@ class CartItem extends React.Component{
     }
 
     decrease = ()=>{
+        // console.log(this.state);
+        const qty = this.state.qty;
+
+        if (qty == 0) {return;}
         this.setState({
-            qty : this.state.qty - 1
+            qty : qty - 1
         })
     }
 
     render(){
-        const {title, price, qty} = this.state;
+        console.log('this.props', this.props);
+        const {title, price, qty} = this.props;
 
         return (
             <div className='cart-item'>
@@ -59,9 +52,9 @@ class CartItem extends React.Component{
                     <img style={customStyles.image}  />
                 </div>
                 <div className='right-block'>
-                    <div style={{fontSize : 25}}>{title}</div>
-                    <div style={{fontSize : 25}}>Rs {price}</div>
-                    <div style={{fontSize : 25}}>Qty: {qty}</div>
+                    <div  style={{fontSize : 30, fontWeight: 500}}>{title}</div>
+                    <div style={{color: "grey", fontSize: 20}} >Rs {price}</div>
+                    <div style={{color: "grey", fontSize: 20}}>Qty: {qty}</div>
 
                     <div className='cart-item-actions'>
 
