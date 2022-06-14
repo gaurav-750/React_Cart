@@ -17,33 +17,33 @@ const customStyles = {
 
 class CartItem extends React.Component{
 
-    increase = () =>{
-        
-        //setState form:
-        // this.setState({
-        //     qty: this.state.qty + 1
-        // });
-                    /* (or) */
-        this.setState((prevState)=>{
-            return {
-                qty : prevState.qty+1
-            }
-        })
-    }
+    // increase(){
+    //     this.props.handleIncreaseQty("X");
+    // //     //setState form:
+    // //     // this.setState({
+    // //     //     qty: this.state.qty + 1
+    // //     // });
+    // //                 /* (or) */
+    // //     this.setState((prevState)=>{
+    // //         return {
+    // //             qty : prevState.qty+1
+    // //         }
+    // //     })
+    // }
 
-    decrease = ()=>{
-        // console.log(this.state);
-        const qty = this.state.qty;
+    // decrease = ()=>{
+    //     // console.log(this.state);
+    //     const qty = this.state.qty;
 
-        if (qty == 0) {return;}
-        this.setState({
-            qty : qty - 1
-        })
-    }
+    //     if (qty === 0) {return;}
+    //     this.setState({
+    //         qty : qty - 1
+    //     })
+    // }
 
     render(){
-        console.log('this.props', this.props);
-        const {title, price, qty} = this.props;
+        // console.log('this.props', this.props);
+        const {title, price, qty, increase, decrease, deleteItem} = this.props;
 
         return (
             <div className='cart-item'>
@@ -58,9 +58,9 @@ class CartItem extends React.Component{
 
                     <div className='cart-item-actions'>
 
-                        <AddCircleIcon onClick={this.increase} color='success' className='action-buttons' fontSize='large'/>
-                        <RemoveCircleIcon onClick={this.decrease} color='error' className='action-buttons' fontSize='large'/>
-                        <DeleteIcon color='action' className='action-buttons' fontSize='large'/>
+                        <AddCircleIcon onClick={()=> {increase(this.props)}} color='success' className='action-buttons' fontSize='large'/>
+                        <RemoveCircleIcon onClick={()=> decrease(this.props)} color='error' className='action-buttons' fontSize='large'/>
+                        <DeleteIcon onClick={()=> {deleteItem(this.props)}} color='action' className='action-buttons' fontSize='large'/>
 
                     </div>
                 </div>
