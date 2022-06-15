@@ -4,6 +4,7 @@ import CartItem from './CartItem';
 function Cart(props){
 
     const {products} = props;
+
     return (
         <div className='cart'>
             {products.map((item) => {

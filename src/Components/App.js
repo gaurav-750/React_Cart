@@ -2,35 +2,48 @@ import React, { useState } from 'react';
 import Cart from './Cart';
 import NavBar from './NavBar';
 
+import firebase from './firebase';
+
 class App extends React.Component{
 
   constructor(){
     super();
 
     this.state = {
-        products : [{
-                id : 1,
-                title : "Watch",
-                price : 1800,
-                qty : 0,
-                img : 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fHdhdGNofGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60'
-            },{
-                id : 2,
-                title : "Mobile",
-                price : 17000,
-                qty : 0,
-                img : 'https://media.istockphoto.com/photos/closeup-of-a-businessman-hand-holding-a-smartphone-white-screen-is-picture-id1322157897?b=1&k=20&m=1322157897&s=170667a&w=0&h=SxgkGs8V4W2_kVgNs1V_gM8OW6fw4lROt1I_zlLIht4='
-            },{
-                id : 3,
-                title : "Laptop",
-                price : 53000,
-                qty : 0,
-                img : 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGFwdG9wfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60'
-        }],
-        
-        
+        products : [],
+        loading : true
     }
 }
+
+  componentDidMount(){
+    firebase
+    .firestore()
+    .collection('products')
+    .get()
+      .then((snapshot) => {
+        // console.log('snapshot', snapshot)
+
+        //snapshot.docs - is an Array of our documents
+
+        // snapshot.docs.map((doc) => {
+        //   console.log('doc.data', doc.data());
+        // })
+   
+        //Getting the products from snapshot.docs => which is an array of products:
+        const products = snapshot.docs.map((doc) => {
+          // console.log('doc.id', doc.id);
+          
+          return doc.data(); //data inside the document 
+        })
+        console.log('products', products);
+
+        this.setState({
+          products : products,
+          loading : false
+        })
+      })
+  }
+
 
 
   handleIncreaseQty = (product) => {
@@ -95,7 +108,6 @@ class App extends React.Component{
     products.map((product) => {
       totalBill += (product.qty*product.price);
     })
-    console.log('tb', totalBill)
 
     return totalBill;
   }
@@ -115,6 +127,8 @@ class App extends React.Component{
           handleDecreaseQty={this.handleDecreaseQty}
           deleteItem={this.deleteItem}
         />
+
+      {this.state.loading ? <h1>Loading Products..</h1> : null}
 
         <h1 style={{padding: 15}}>
           Total: {this.getTotalBill()}
