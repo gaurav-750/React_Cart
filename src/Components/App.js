@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Cart from './Cart';
 import NavBar from './NavBar';
 
-import firebase from './firebase';
+import firebase from '../firebase';
+
+import { v4 as uuidv4 } from 'uuid';
+ 
 
 class App extends React.Component{
 
@@ -19,29 +22,20 @@ class App extends React.Component{
     firebase
     .firestore()
     .collection('products')
-    .get()
-      .then((snapshot) => {
-        // console.log('snapshot', snapshot)
+    .onSnapshot((snapshot) => {
+      //snapshot.docs - is an Array of our documents
 
-        //snapshot.docs - is an Array of our documents
-
-        // snapshot.docs.map((doc) => {
-        //   console.log('doc.data', doc.data());
-        // })
-   
-        //Getting the products from snapshot.docs => which is an array of products:
-        const products = snapshot.docs.map((doc) => {
-          // console.log('doc.id', doc.id);
-          
-          return doc.data(); //data inside the document 
-        })
-        console.log('products', products);
-
-        this.setState({
-          products : products,
-          loading : false
-        })
+      //Getting the products from snapshot.docs => which is an array of products:
+      const products = snapshot.docs.map((doc) => {
+        return doc.data(); //data inside the document 
       })
+      // console.log('products', products);
+
+      this.setState({
+        products : products,
+        loading : false //so the 'Loading Items..' disappears
+      })
+    });
   }
 
 
@@ -68,7 +62,7 @@ class App extends React.Component{
       const {products : productsArr} = this.state;
       const index = productsArr.findIndex((p) => {return p.id === product.id});
 
-      if (productsArr[index].qty == 0) {return;}
+      if (productsArr[index].qty === 0) {return;}
       productsArr[index].qty -= 1; //decrease the quantity of the product
       this.setState({
           products: productsArr
@@ -112,7 +106,28 @@ class App extends React.Component{
     return totalBill;
   }
 
+  addProduct = ()=> {
+    firebase
+      .firestore()
+      .collection('products')
+      .add({
+        title : 'Washing machine',
+        price : 25000,
+        qty : 1,
+        img : 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8d2FzaGluZyUyMG1hY2hpbmV8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60',
+        id : uuidv4()
+      })
+      .then((docRef) => {
+        console.log('Product added', docRef);
+      })
+      .catch((err) => {
+        console.log('error', err)
+      })
+
+  }
+
   render(){
+    {console.log('render')}
 
     const {products} = this.state;
 
@@ -121,6 +136,9 @@ class App extends React.Component{
         <NavBar
           count={this.getCartCount}
         />
+
+        <button onClick={this.addProduct}>Add Product</button>
+
         <Cart
           products={products}
           handleIncreaseQty={this.handleIncreaseQty}
