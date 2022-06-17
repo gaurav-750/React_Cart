@@ -11,11 +11,7 @@ function Cart(props){
                 return (
                     <CartItem 
                         key={item.id}
-                        id={item.id}
-                        title={item.title}
-                        price={item.price}
-                        qty={item.qty}
-                        img={item.img}
+                        product={item}
                         increase={props.handleIncreaseQty}
                         decrease={props.handleDecreaseQty}
                         deleteItem={props.deleteItem}

@@ -16,6 +16,7 @@ class App extends React.Component{
         products : [],
         loading : true
     }
+
 }
 
   componentDidMount(){
@@ -27,9 +28,12 @@ class App extends React.Component{
 
       //Getting the products from snapshot.docs => which is an array of products:
       const products = snapshot.docs.map((doc) => {
-        return doc.data(); //data inside the document 
+        const data = doc.data();
+        data['id'] = doc.id;
+
+        // console.log('Updated doc.data()', data);
+        return data; //data inside the document 
       })
-      // console.log('products', products);
 
       this.setState({
         products : products,
@@ -50,9 +54,18 @@ class App extends React.Component{
           return p.id === product.id
       });
 
-      productsArr[index].qty += 1; //increase the quantity of the product
-      this.setState({ //re-render the cart component
-          products: productsArr
+                      //Updating in firebase:
+      const docRef = firebase.firestore().collection('products').doc(productsArr[index].id);
+      console.log("docref", docRef);
+
+      docRef.update({
+        qty : productsArr[index].qty + 1
+      })
+      .then(() => {
+        console.log("Quantity increased succesfully!");
+      })
+      .catch((err) => {
+        console.log("error", err);
       })
 
   }
@@ -62,11 +75,27 @@ class App extends React.Component{
       const {products : productsArr} = this.state;
       const index = productsArr.findIndex((p) => {return p.id === product.id});
 
-      if (productsArr[index].qty === 0) {return;}
-      productsArr[index].qty -= 1; //decrease the quantity of the product
-      this.setState({
-          products: productsArr
+      console.log(productsArr[index]);
+      //updating in FireBase:
+      const docRef = firebase.firestore().collection('products').doc(productsArr[index].id);
+      console.log('docref', docRef);
+    
+
+      docRef.update({
+        qty : productsArr[index].qty - 1
       })
+      .then(() => {
+        console.log('Quantity decreased succesfully!');
+      })
+      .catch((err) => {
+        console.log('Error', err);
+      })
+
+      // if (productsArr[index].qty === 0) {return;}
+      // productsArr[index].qty -= 1; //decrease the quantity of the product
+      // this.setState({
+      //     products: productsArr
+      // })
   }
 
   deleteItem = (product) => {
@@ -111,11 +140,10 @@ class App extends React.Component{
       .firestore()
       .collection('products')
       .add({
-        title : 'Washing machine',
-        price : 25000,
+        title : 'Watch',
+        price : 1800,
         qty : 1,
-        img : 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8d2FzaGluZyUyMG1hY2hpbmV8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60',
-        id : uuidv4()
+        img : 'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8d2F0Y2h8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60',
       })
       .then((docRef) => {
         console.log('Product added', docRef);
@@ -127,7 +155,6 @@ class App extends React.Component{
   }
 
   render(){
-    {console.log('render')}
 
     const {products} = this.state;
 

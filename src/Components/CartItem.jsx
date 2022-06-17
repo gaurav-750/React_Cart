@@ -17,9 +17,9 @@ const customStyles = {
 
 function CartItem(props){
 
-        // console.log('this.props', this.props);
-        const {title, img, price, qty, increase, decrease, deleteItem} = props;
-
+        const {title, img, price, qty} = props.product;
+        const {increase, decrease, deleteItem} = props;
+       
         return (
             <div className='cart-item'>
                 
@@ -33,9 +33,9 @@ function CartItem(props){
 
                     <div className='cart-item-actions'>
 
-                        <AddCircleIcon onClick={()=> {increase(props)}} color='success' className='action-buttons' fontSize='large'/>
-                        <RemoveCircleIcon onClick={()=> decrease(props)} color='error' className='action-buttons' fontSize='large'/>
-                        <DeleteIcon onClick={()=> {deleteItem(props)}} color='action' className='action-buttons' fontSize='large'/>
+                        <AddCircleIcon onClick={()=> {increase(props.product)}} color='success' className='action-buttons' fontSize='large'/>
+                        <RemoveCircleIcon onClick={()=> decrease(props.product)} color='error' className='action-buttons' fontSize='large'/>
+                        <DeleteIcon onClick={()=> {deleteItem(props.product)}} color='action' className='action-buttons' fontSize='large'/>
 
                     </div>
                 </div>
