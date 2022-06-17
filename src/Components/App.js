@@ -21,6 +21,9 @@ class App extends React.Component{
     firebase
     .firestore()
     .collection('products')
+    .where('price', '>', 999)
+    // .where('title', '==', 'Dress')
+    // .orderBy('price')
     .onSnapshot((snapshot) => {
       //snapshot.docs - is an Array of our documents
 
@@ -146,10 +149,10 @@ class App extends React.Component{
       .firestore()
       .collection('products')
       .add({
-        title : 'Watch',
-        price : 1800,
+        title : 'Dress',
+        price : 999,
         qty : 1,
-        img : 'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8d2F0Y2h8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60',
+        img : "https://images.unsplash.com/photo-1582639590011-f5a8416d1101?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fGJlYXV0aWZ1bCUyMGdpcmxzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
       })
       .then((docRef) => {
         console.log('Product added', docRef);
@@ -170,7 +173,7 @@ class App extends React.Component{
           count={this.getCartCount}
         />
 
-        <button onClick={this.addProduct}>Add Product</button>
+        {/* <button onClick={this.addProduct}>Add Product</button> */}
 
         <Cart
           products={products}
