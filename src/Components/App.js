@@ -4,7 +4,6 @@ import NavBar from './NavBar';
 
 import firebase from '../firebase';
 
-
 class App extends React.Component{
 
   constructor(){
@@ -12,65 +11,54 @@ class App extends React.Component{
 
     this.state = {
         products : [],
-        loading : true
+        loading : true //loader
     }
+
+    this.db = firebase.firestore();
 
 }
 
   componentDidMount(){
+
     firebase
-    .firestore()
-    .collection('products')
-    .where('price', '>', 999)
-    // .where('title', '==', 'Dress')
-    // .orderBy('price')
-    .onSnapshot((snapshot) => {
-      //snapshot.docs - is an Array of our documents
+      .firestore()
+      .collection('products')
+      .orderBy('price')
+      .onSnapshot((snapshot) => {
 
-      //Getting the products from snapshot.docs => which is an array of products:
-      const products = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        data['id'] = doc.id; //adding id to the document
-        //a particular document has already and id
+        const products = snapshot.docs.map((doc) => {
+          const data = doc.data();
 
-        // console.log('Updated doc.data()', data);
-        return data; //data inside the document 
+          //adding the id to doc:
+          data['id'] = doc.id;
+          return data;
+        })
+        // console.log('products:', products);
+
+        this.setState({
+          products : products,
+          loading : false
+        })
       })
-
-      this.setState({
-        products : products,
-        loading : false //so the 'Loading Items..' disappears
-      })
-    });
+      
   }
-
 
 
   handleIncreaseQty = (product) => {
 
-      //Get the products array which is present in this.state
-      // const {products : productsArr} = this.state;
+    //get the reference of the particular document which is clicked:
+    const docRef = this.db.collection('products').doc(product.id);
 
-      // //find the index of the product:
-      // const index = productsArr.findIndex((p) => {
-      //     return p.id === product.id
-      // });
-
-                      //Updating in firebase:
-      //Get the reference to that document
-      const docRef = firebase.firestore().collection('products').doc(product.id);
-      console.log("docref", docRef);
-
-      docRef.update({
-        qty : product.qty + 1
-      })
-      .then(() => {
-        console.log("Quantity increased succesfully!");
-      })
-      .catch((err) => {
-        console.log("error", err);
-      })
-
+    docRef.update({
+      qty : product.qty +1
+    })
+    .then(() => {
+      console.log('Qty inc. succesfully!');
+    })
+    .catch((err) => {
+      console.log('Error', err);
+    })
+      
   }
 
   handleDecreaseQty = (product) => {
@@ -78,47 +66,37 @@ class App extends React.Component{
       // const {products : productsArr} = this.state;
       // const index = productsArr.findIndex((p) => {return p.id === product.id});
 
-      //updating in FireBase:
-      const docRef = firebase.firestore().collection('products').doc(product.id);
-      console.log('docref', docRef);
-    
+      const docRef = this.db.collection('products').doc(product.id);
+
+      if (product.qty === 0) {
+        return;
+      }
+
       docRef.update({
         qty : product.qty - 1
       })
       .then(() => {
-        console.log('Quantity decreased succesfully!');
+        console.log('Qty dec. succesfully!');
       })
       .catch((err) => {
         console.log('Error', err);
       })
+      
   }
 
   deleteItem = (product) => {
+      // console.log('product', product);
 
-      // const {products : productsArr} = this.state;
+      const docRef = this.db.collection('products').doc(product.id);
 
-      //remove the product from products Array:
-      // const newArr = productsArr.filter((p) => {
-      //     return p.id !== product.id
-      // })
-
-      //SetState:
-      // this.setState({
-      //     products : newArr
-      // })
-
-    //Get the document reference from the database
-    const docRef = firebase.firestore().collection('products').doc(product.id);
-    console.log('docRef', docRef);
-
-    docRef
-      .delete()
-      .then(() => {
-        console.log("Item Deleted successfully!")
-      })
-      .catch((err) => {
-        console.log("Error", err);
-      })
+      docRef
+        .delete()
+        .then(() => {
+          console.log('Item Deleted succesfully!');
+        })
+        .catch((err) => {
+          console.log('Error', err);
+        })
 
   }
 
@@ -145,21 +123,23 @@ class App extends React.Component{
   }
 
   addProduct = ()=> {
-    firebase
-      .firestore()
+    
+    this.db
       .collection('products')
       .add({
-        title : 'Dress',
-        price : 999,
+        title : 'Watch',
+        price : 1799,
         qty : 1,
-        img : "https://images.unsplash.com/photo-1582639590011-f5a8416d1101?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fGJlYXV0aWZ1bCUyMGdpcmxzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
+        img : 'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8d2F0Y2h8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60'
       })
-      .then((docRef) => {
-        console.log('Product added', docRef);
+      .then((docref) => {
+        console.log('Product has been added!');
+        // console.log('docref:', docref);
       })
       .catch((err) => {
-        console.log('error', err)
+        console.log('Error in adding product:', err);
       })
+
 
   }
 
@@ -173,7 +153,9 @@ class App extends React.Component{
           count={this.getCartCount}
         />
 
-        {/* <button onClick={this.addProduct}>Add Product</button> */}
+        {/* <button onClick={this.addProduct} style={{padding : '10px', fontSize : '16px'}}>
+          Add Product
+        </button> */}
 
         <Cart
           products={products}
@@ -182,7 +164,7 @@ class App extends React.Component{
           deleteItem={this.deleteItem}
         />
 
-      {this.state.loading ? <h1>Loading Products..</h1> : null}
+      {this.state.loading == true ? <h1>Loading Products..</h1> : null}
 
         <h1 style={{padding: 15}}>
           Total: {this.getTotalBill()}

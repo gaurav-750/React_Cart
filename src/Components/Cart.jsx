@@ -7,6 +7,7 @@ function Cart(props){
 
     return (
         <div className='cart'>
+            
             {products.map((item) => {
                 return (
                     <CartItem 

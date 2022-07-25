@@ -2,19 +2,15 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
-
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCt0_5UCqFZtT8oB8oYqdbAFvuo_-h_Oqg",
-    authDomain: "reactcart-a91aa.firebaseapp.com",
-    projectId: "reactcart-a91aa",
-    storageBucket: "reactcart-a91aa.appspot.com",
-    messagingSenderId: "91285250787",
-    appId: "1:91285250787:web:54516f39f323ad5065dbd6"
-  };
-  
-// Initialize Firebase
-// const app = initializeApp(firebaseConfig);
+  apiKey: "AIzaSyAHm-sLxRur5IWfIIP5B3MFCFxqem2oNno",
+  authDomain: "shopping-cart-b0e65.firebaseapp.com",
+  projectId: "shopping-cart-b0e65",
+  storageBucket: "shopping-cart-b0e65.appspot.com",
+  messagingSenderId: "436273998596",
+  appId: "1:436273998596:web:ab02c6fbf457d275b7be51"
+};
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
